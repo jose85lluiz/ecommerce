@@ -16,12 +16,12 @@ switch($method)
 {
 
 case "get":
-   $this->values[$fildName];
+  return $this->values[$fildName];
    break;
 
 
 case "set":
-   $this->values[$fildName]=$args[0];
+    $this->values[$fildName]=$args[0];
 break;
 
   }
