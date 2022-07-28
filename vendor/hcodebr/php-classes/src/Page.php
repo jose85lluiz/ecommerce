@@ -27,6 +27,7 @@ use Rain\Tpl;
 	Tpl::configure( $config );
     
     $this -> tpl = new Tpl;
+    
     $this ->setData($this->options["data"]);
     if($this -> options["header"]===true) $this->tpl-> draw("header");
 }
