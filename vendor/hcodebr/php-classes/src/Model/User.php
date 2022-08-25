@@ -324,6 +324,18 @@ $idrecovery = openssl_decrypt(base64_decode($code), 'AES-128-CBC', pack("a16",Us
 
 
     }
+
+    public static function getErrorRegister()
+  {
+
+    $msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+
+    User::clearErrorRegister();
+
+    return $msg;
+
+  }
+
     public static function clearErrorRegister()
   {
 
