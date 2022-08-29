@@ -67,12 +67,12 @@ public static function login($login,$password)
 if (count($results)===0)
 {
 
-throw new \Exception("Usuario inexistente ou senha invalida.",1);
+throw new \Exception("Usuario inexistente ou senha invalida!!.",1);
 
 }
 $data = $results[0];
 
-if(password_verify($password, $data["despassword"])===true)
+if (password_verify($password, $data["despassword"])===true)
 {
 
 	$user = new User();
@@ -96,9 +96,9 @@ public static function verifyLogin($inadmin = true)
 if (!User::checkLogin($inadmin)) {
 
       if ($inadmin) {
-        header("Location: /admin/login");
+        header("Location:/admin/login");
       } else {
-        header("Location: /login");
+        header("Location:/login");
       }
       exit;
 
@@ -188,7 +188,7 @@ public function delete()
    ));
 }
 
-public static function getForgot($email)
+public static function getForgot($email, $inadmin = true)
 {
 
 $sql = new Sql();
@@ -228,7 +228,14 @@ else
   	$dataRecovery = $results2[0];
   	$code = openssl_encrypt($dataRecovery['idrecovery'], 'AES-128-CBC',pack("a16",User::SECRET),0,pack("a16",User::SECRET_IV));
     $code = base64_encode($code);
-  	$link = "http://wwww.hcodecommerce.com.br/admin/forgot/reset?code=$code";
+  
+    if($inadmin === true){
+    $link = "http://wwww.hcodecommerce.com.br/admin/forgot/reset?code=$code";
+
+    }else{
+  	$link = "http://wwww.hcodecommerce.com.br/forgot/reset?code=$code";
+  }
+
     $mailer = new Mailer($data["desemail"],$data["desperson"],"redefinir senha da Hcode Store","forgot",
     	array(
 
