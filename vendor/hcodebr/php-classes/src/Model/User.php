@@ -11,6 +11,7 @@ const SECRET = "sub__Php7_secret";
 Const SECRET_IV= "sub_Php7_secrIV";
 const ERROR = "UserError";
 const ERROR_REGISTER = "UserErrorRegister";
+const SUCCESS = "UserSucess";
 
 public static function getFromSession(){
 
@@ -321,6 +322,28 @@ $idrecovery = openssl_decrypt(base64_decode($code), 'AES-128-CBC', pack("a16",Us
     public function clearError(){
 
     $_SESSION[User::ERROR] = NULL;
+
+    }
+
+    public function setSuccess($msg){
+
+     $_SESSION[User::SUCCESS] = $msg;
+
+    }
+
+    public function getSuccess(){
+
+     $msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
+    
+     User::clearSuccess();
+    
+     return $msg;
+
+    }
+
+    public function clearSuccess(){
+
+    $_SESSION[User::SUCCESS] = NULL;
 
     }
 
