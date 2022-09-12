@@ -705,6 +705,16 @@ $app->post("/profile/change-password",function(){
 
    }
 
+   if($_POST['new_pass'] !== $_POST['new_pass_confirm']){
+
+    User::setError("A confirmaçao da senha deve ser ser igual a nova senha.");
+
+    header("Location:/profile/change-password");
+    
+    exit;
+
+   }
+
    $user = User::getFromSession();
 
    if(!password_verify($_POST['current_pass'], $user->getdespassword())){
@@ -716,7 +726,7 @@ $app->post("/profile/change-password",function(){
     exit;
    } 
 
-   $user->getdespassword($_POST('new_pass'));
+   $user->setdespassword($_POST['new_pass']);
 
    $user->update();
 

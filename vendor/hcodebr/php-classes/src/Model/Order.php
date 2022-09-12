@@ -3,8 +3,13 @@
 namespace Hcode\Model;
 use  \Hcode\DB\Sql;
 use  \Hcode\Model;
+use  \Hcode\Model\Cart;
 
 class Order extends Model{
+
+const SUCCESS = "Order-Success;save";
+const ERROR = "Order-Error";
+
 
 public function save()
 	{
@@ -51,7 +56,91 @@ public function get($idorder)
 
 	}
 
+public static function listAll(){
 
+$sql = new Sql;
+
+return $sql->select("
+            SELECT * 
+			FROM tb_orders a 
+			INNER JOIN tb_ordersstatus b USING(idstatus) 
+			INNER JOIN tb_carts c USING(idcart)
+			INNER JOIN tb_users d ON d.iduser = a.iduser
+			INNER JOIN tb_addresses e USING(idaddress)
+			INNER JOIN tb_persons f ON f.idperson = d.idperson
+			ORDER BY a.dtregister DESC
+		");
+
+
+  }
+
+
+  public function delete(){
+
+
+  	$sql= new Sql;
+
+  	$sql->query("DELETE FROM tb_orders WHERE idorder = :idorder",[
+    
+    ':idorder'=> $this->getidorder()
+
+  	]);
+  }  
+
+  public function getCart():Cart{
+
+ $cart = new Cart();
+
+ $cart->get((int)$this->getidcart());
+
+ return $cart;
+
+
+  }
+
+  public function setError($msg){
+
+     $_SESSION[ORDER::ERROR] = $msg;
+
+    }
+
+    public function getError(){
+
+     $msg = (isset($_SESSION[ORDER::ERROR]) && $_SESSION[ORDER::ERROR]) ? $_SESSION[ORDER::ERROR] : '';
+    
+     User::clearError();
+    
+     return $msg;
+
+    }
+
+    public function clearError(){
+
+    $_SESSION[ORDER::ERROR] = NULL;
+
+    }
+
+    public function setSuccess($msg){
+
+     $_SESSION[User::SUCCESS] = $msg;
+
+    }
+
+    public function getSuccess(){
+
+     $msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
+    
+     User::clearSuccess();
+    
+     return $msg;
+
+    }
+
+    public function clearSuccess(){
+
+    $_SESSION[User::SUCCESS] = NULL;
+
+    }
 
 }
 
