@@ -415,6 +415,54 @@ $idrecovery = openssl_decrypt(base64_decode($code), 'AES-128-CBC', pack("a16",Us
     return $results;
 
   }
+
+  public static function getPage($page = 1 , $itensPerPage = 10){
+
+      $start = ($page -1) * $itensPerPage;
+              $sql = new Sql();
+  $results = $sql->select("SELECT sql_calc_found_rows * FROM tb_users a
+              INNER JOIN tb_persons b 
+              USING(idperson) 
+              ORDER BY b.desperson
+              LIMIT $start,$itensPerPage
+
+              ");
+
+        $resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+        return [
+         'data'=>$results,
+         'total'=>(int)$resultTotal[0]["nrtotal"],
+         'pages'=>ceil($resultTotal[0]["nrtotal"] / $itensPerPage)
+        ];
+}
+
+public static function getPageSearch($search, $page = 1 , $itensPerPage = 10){
+
+      $start = ($page -1) * $itensPerPage;
+              $sql = new Sql();
+  $results = $sql->select("SELECT sql_calc_found_rows 
+            * FROM tb_users a
+              INNER JOIN tb_persons b 
+              USING(idperson) 
+              WHERE b.desperson LIKE :search OR b.desemail = :search OR a.deslogin LIKE :search
+              ORDER BY b.desperson
+              LIMIT $start,$itensPerPage
+
+              ",[
+               'search'=>'%'.$search.'%'
+
+                ]);
+
+        $resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal");
+
+        return [
+         'data'=>$results,
+         'total'=>(int)$resultTotal[0]["nrtotal"],
+         'pages'=>ceil($resultTotal[0]["nrtotal"] / $itensPerPage)
+        ];
+}
+
  
 }
 
