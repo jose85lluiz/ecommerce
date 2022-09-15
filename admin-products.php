@@ -36,7 +36,7 @@ for ($x = 0; $x < $pagination['pages']; $x++)
       ]);
 
    }
-$products = Products::listAll();
+
 
 $page = new PageAdmin();
 
