@@ -249,10 +249,9 @@ $address->save();
 
 $cart = Cart::getFromSession();
 
-$cart->getCalculateTotal();
-
 $order = new Order();
 
+$cart->getCalculateTotal();
 
 $order->setData([
 
@@ -266,10 +265,45 @@ $order->setData([
 $order->save();
 
 
-header("Location:/order/".$order->getidorder());
+header("Location:/order/".$order->getidorder()."/pagseguro");
 
 exit;
 
+});
+
+$app->get("/order/:idorder/pagseguro",function($idorder){
+
+User::verifyLogin(false);
+
+$order = new Order();
+
+$order->get((int)$idorder);
+
+$cart = $order->getCart();
+
+
+
+$page = new Page();
+
+$page =  new Page([
+   'header' =>false,
+   'footer' =>false
+
+]);
+
+
+$page ->setTpl("payment-pagseguro",[
+ 
+   'order'=> $order->getValues() ,
+   'cart'=> $cart->getValues(),
+   'products'=> $cart->getProducts(),
+   'phone'=>[
+
+     'areaCode'=>substr($order->getnrphpne(), 0, 2),
+     'number'=> substr($order->getnrphpne(),2, strlen($order->getnrphpne()))
+   ]
+
+  ]);
 });
 
 
